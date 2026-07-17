@@ -30,7 +30,9 @@ def main() -> None:
         ],
     )
     if response:
-        print(f"Prompt tokens: {response.usage.prompt_tokens}\nResponse tokens: {response.usage.completion_tokens}\nResponse:\n{response.choices[0].message.content}")
+        print(f"Prompt tokens: {response.usage.prompt_tokens}"
+              f"\nResponse tokens: {response.usage.completion_tokens}"
+              f"\nResponse:\n{response.choices[0].message.content}")
     else:
         raise RuntimeError("No response received from the OpenRouter API.")
 
