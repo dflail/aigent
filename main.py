@@ -1,3 +1,4 @@
+import argparse
 import os
 
 from dotenv import load_dotenv
@@ -14,16 +15,24 @@ def main() -> None:
         base_url="https://openrouter.ai/api/v1",
         api_key=api_key
     )
+
+    parser = argparse.ArgumentParser(description="Chatbot")
+    parser.add_argument("user_prompt", type=str, help="User prompt")
+    args = parser.parse_args()
+
     response = client.chat.completions.create(
         model="openrouter/free",
         messages=[
             {
                 "role": "user",
-                "content": "Why is Boot.dev such a great place to learn backend development? Use one paragraph maximum.",
+                "content": args.user_prompt
             }
         ],
     )
-    print(f"Response: {response.choices[0].message.content}")
+    if response:
+        print(f"Prompt tokens: {response.usage.prompt_tokens}\nResponse tokens: {response.usage.completion_tokens}\nResponse:\n{response.choices[0].message.content}")
+    else:
+        raise RuntimeError("No response received from the OpenRouter API.")
 
 if __name__ == "__main__":
     main()
