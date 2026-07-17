@@ -18,21 +18,25 @@ def main() -> None:
 
     parser = argparse.ArgumentParser(description="Chatbot")
     parser.add_argument("user_prompt", type=str, help="User prompt")
+    parser.add_argument("--verbose", action="store_true", help="Enable verbose output")
     args = parser.parse_args()
+
+    messages = [
+        {"role": "user", "content": args.user_prompt},
+    ]
 
     response = client.chat.completions.create(
         model="openrouter/free",
-        messages=[
-            {
-                "role": "user",
-                "content": args.user_prompt
-            }
-        ],
+        messages=messages
     )
     if response:
-        print(f"Prompt tokens: {response.usage.prompt_tokens}"
-              f"\nResponse tokens: {response.usage.completion_tokens}"
-              f"\nResponse:\n{response.choices[0].message.content}")
+        if args.verbose:
+            print(f"User prompt: {args.user_prompt}"
+                f"Prompt tokens: {response.usage.prompt_tokens}"
+                f"\nResponse tokens: {response.usage.completion_tokens}"
+                f"\nResponse:\n{response.choices[0].message.content}")
+        else:
+            print(response.choices[0].message.content)
     else:
         raise RuntimeError("No response received from the OpenRouter API.")
 
